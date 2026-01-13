@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endoflow - Triagem para Endometriose</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-logos">
+                <img src="assets/logo-endolife.png" alt="Endo Life" class="logo logo-endolife">
+                <div class="logo-divider"></div>
+                <img src="assets/logo-sus-digital.png" alt="SUS Digital" class="logo logo-sus">
+            </div>
+            <div class="header-title">
+                <h1>Endoflow</h1>
+                <p>Triagem para Suspeita de Endometriose</p>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <span>Cadastro</span>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <span>Consentimento</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <span>Questionário</span>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <span>Resultado</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Step 1: Welcome & Registration -->
+            <section class="screen active" id="screen-welcome">
+                <div class="screen-content">
+                    <div class="welcome-icon">
+                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                            <circle cx="40" cy="40" r="38" stroke="#E91E63" stroke-width="4"/>
+                            <path d="M40 20C40 20 25 32 25 42C25 52 32 58 40 58C48 58 55 52 55 42C55 32 40 20 40 20Z" fill="#E91E63"/>
+                        </svg>
+                    </div>
+                    <h2>Bem-vinda ao Endoflow</h2>
+                    <p class="subtitle">Vamos juntas entender seus sintomas?</p>
+                    <p class="description">Esta é uma ferramenta de triagem rápida para suspeita de endometriose. Leva menos de 5 minutos e pode ajudar você a conversar com seu médico.</p>
+                    
+                    <form id="registrationForm" class="form">
+                        <div class="form-group">
+                            <label for="name">Nome completo</label>
+                            <input type="text" id="name" name="name" required placeholder="Digite seu nome">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="age">Idade</label>
+                                <input type="number" id="age" name="age" required min="12" max="60" placeholder="Ex: 28">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="whatsapp">WhatsApp (com DDD)</label>
+                            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="(11) 99999-9999">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Próximo</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Step 2: Consent -->
+            <section class="screen" id="screen-consent">
+                <div class="screen-content">
+                    <h2>Sua privacidade é nossa prioridade</h2>
+                    <p class="subtitle">Para continuar, precisamos que você leia e aceite nossos termos.</p>
+
+                    <!-- LGPD Consent -->
+                    <div class="consent-card">
+                        <div class="consent-header" onclick="toggleConsent('lgpd')">
+                            <div class="consent-title">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#1976D2" stroke-width="2"/>
+                                    <path d="M9 12L11 14L15 10" stroke="#1976D2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>Política de Privacidade e Termos de Uso (LGPD)</span>
+                            </div>
+                            <svg class="chevron" id="chevron-lgpd" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 9L12 15L18 9" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="consent-summary">
+                            <p>Seus dados são protegidos pela LGPD. Coletamos apenas informações essenciais para a triagem e nunca compartilhamos com terceiros para fins comerciais.</p>
+                        </div>
+                        <div class="consent-full" id="consent-lgpd">
+                            <div class="consent-text">
+                                <h4>Política de Privacidade e Termo de Uso – Endoflow</h4>
+                                <p><strong>Última atualização:</strong> 13 de janeiro de 2026</p>
+                                
+                                <h5>1. Quais dados coletamos?</h5>
+                                <p>Para realizar a triagem, coletamos: <strong>Dados de Cadastro</strong> (nome, idade, e-mail e WhatsApp), <strong>Dados de Saúde</strong> (suas respostas ao questionário de 8 perguntas) e <strong>Dados de Uso</strong> (como você interage com a ferramenta).</p>
+                                
+                                <h5>2. Para que usamos seus dados?</h5>
+                                <p>Exclusivamente para: calcular seu Score de Risco, gerar seu Relatório Personalizado, enviar seu resultado por e-mail/WhatsApp e melhorar a ferramenta de forma anônima.</p>
+                                
+                                <h5>3. Como protegemos seus dados?</h5>
+                                <p>Utilizamos <strong>criptografia</strong> de ponta a ponta, <strong>acesso restrito</strong> apenas a profissionais autorizados e <strong>segregação</strong> de dados de identificação e dados de saúde, tudo armazenado de forma segura na Google Cloud Platform.</p>
+                                
+                                <h5>4. Com quem compartilhamos seus dados?</h5>
+                                <p><strong>Não vendemos nem compartilhamos seus dados para fins de marketing.</strong> O compartilhamento ocorre apenas com você (seu relatório) e serviços de notificação (como WhatsApp), sob contratos de confidencialidade.</p>
+                                
+                                <h5>5. Quais são os seus direitos?</h5>
+                                <p>Você pode solicitar <strong>acesso</strong>, <strong>correção</strong> ou <strong>exclusão</strong> (direito ao esquecimento) dos seus dados a qualquer momento através do e-mail: privacidade@endolife.health.</p>
+                                
+                                <h5>6. Importante</h5>
+                                <p>O Endoflow é uma ferramenta de <strong>triagem e apoio à decisão</strong>. O resultado <strong>não substitui uma consulta médica</strong> nem um diagnóstico profissional.</p>
+                            </div>
+                        </div>
+                        <div class="consent-checkbox">
+                            <input type="checkbox" id="lgpdConsent" name="lgpdConsent">
+                            <label for="lgpdConsent">Li e aceito a Política de Privacidade e os Termos de Uso.</label>
+                        </div>
+                    </div>
+
+                    <!-- Research Consent (TCLE) -->
+                    <div class="consent-card">
+                        <div class="consent-header" onclick="toggleConsent('tcle')">
+                            <div class="consent-title">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 12H15M9 16H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L18.7071 8.70711C18.8946 8.89464 19 9.149 19 9.41421V19C19 20.1046 18.1046 21 17 21Z" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>Termo de Consentimento para Pesquisa (TCLE)</span>
+                            </div>
+                            <svg class="chevron" id="chevron-tcle" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 9L12 15L18 9" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="consent-summary">
+                            <p>Ao participar, você contribui para a validação científica desta ferramenta em parceria com o Hub Inova UNIMES. Seus dados serão anonimizados para a pesquisa.</p>
+                        </div>
+                        <div class="consent-full" id="consent-tcle">
+                            <div class="consent-text">
+                                <h4>Termo de Consentimento Livre e Esclarecido (TCLE)</h4>
+                                <p><strong>Título do Estudo:</strong> Validação de uma Ferramenta de Triagem Digital (Endoflow) para Rastreamento de Risco de Endometriose na População Brasileira.</p>
+                                <p><strong>Pesquisadores Responsáveis:</strong> Endolife HealthTech em parceria com o Hub Inova UNIMES.</p>
+                                
+                                <h5>1. Objetivo da Pesquisa</h5>
+                                <p>Validar a eficácia do questionário Endoflow como ferramenta de triagem para identificar mulheres com alto risco de endometriose, comparando os resultados com diagnósticos clínicos.</p>
+                                
+                                <h5>2. Sua Participação</h5>
+                                <p>Consistirá em: (1) Responder ao questionário online (menos de 5 minutos) e (2) Autorizar o uso das suas respostas, de forma <strong>totalmente anônima</strong>, para fins de pesquisa científica.</p>
+                                
+                                <h5>3. Riscos e Benefícios</h5>
+                                <p><strong>Riscos:</strong> Não há riscos físicos. O único risco, considerado mínimo, é o de quebra de sigilo, minimizado por medidas rigorosas de segurança.</p>
+                                <p><strong>Benefício Direto:</strong> Você receberá gratuitamente um relatório com sua pontuação de risco.</p>
+                                <p><strong>Benefício Indireto:</strong> Contribuir para o avanço da ciência na saúde da mulher no Brasil.</p>
+                                
+                                <h5>4. Garantia de Privacidade</h5>
+                                <p>Seus dados serão <strong>anonimizados</strong> (vinculados a um código, sem seu nome ou contato) e armazenados de forma segura. Qualquer publicação científica apresentará dados de forma agregada, impossibilitando a identificação individual.</p>
+                                
+                                <h5>5. Participação Voluntária</h5>
+                                <p>Sua participação é <strong>totalmente voluntária</strong>. Você pode se recusar a participar ou retirar seu consentimento a qualquer momento, sem qualquer prejuízo, através do e-mail: pesquisa@endolife.health.</p>
+                                
+                                <h5>Contato para Dúvidas</h5>
+                                <p>Endolife HealthTech: pesquisa@endolife.health<br>Hub Inova UNIMES: comitedeetica@unimes.br</p>
+                            </div>
+                        </div>
+                        <div class="consent-checkbox">
+                            <input type="checkbox" id="tcleConsent" name="tcleConsent">
+                            <label for="tcleConsent">Li e aceito participar da pesquisa.</label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" id="btnStartTest" disabled onclick="startTest()">Iniciar Teste</button>
+                </div>
+            </section>
+
+            <!-- Step 3: Questionnaire -->
+            <section class="screen" id="screen-questionnaire">
+                <div class="screen-content">
+                    <div class="question-progress">
+                        <span id="questionNumber">Pergunta 1 de 8</span>
+                        <div class="question-progress-bar">
+                            <div class="question-progress-fill" id="questionProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <div class="question-container" id="questionContainer">
+                        <!-- Questions will be dynamically inserted here -->
+                    </div>
+
+                    <div class="question-navigation">
+                        <button type="button" class="btn btn-secondary" id="btnPrevQuestion" onclick="prevQuestion()" disabled>Anterior</button>
+                        <button type="button" class="btn btn-primary" id="btnNextQuestion" onclick="nextQuestion()">Próximo</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Results -->
+            <section class="screen" id="screen-results">
+                <div class="screen-content results-content">
+                    <div class="results-header">
+                        <h2>Seu resultado está pronto</h2>
+                        <p class="subtitle" id="userName">Olá, [Nome]</p>
+                    </div>
+
+                    <!-- Risk Level Card -->
+                    <div class="result-card risk-card" id="riskCard">
+                        <div class="risk-indicator" id="riskIndicator">
+                            <div class="risk-circle" id="riskCircle">
+                                <span class="risk-score" id="riskScore">0</span>
+                                <span class="risk-label">pontos</span>
+                            </div>
+                        </div>
+                        <div class="risk-info">
+                            <h3 id="riskLevel">Nível de Risco</h3>
+                            <p id="riskDescription">Descrição do nível de risco</p>
+                        </div>
+                    </div>
+
+                    <!-- Explanation Card -->
+                    <div class="result-card explanation-card">
+                        <h3>O que isso significa?</h3>
+                        <div class="explanation-content" id="explanationContent">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+
+                    <!-- Next Steps Card -->
+                    <div class="result-card steps-card">
+                        <h3>Próximos Passos Recomendados</h3>
+                        <div class="steps-list" id="stepsList">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+
+                    <!-- User Answers Summary -->
+                    <div class="result-card answers-card">
+                        <div class="answers-header" onclick="toggleAnswers()">
+                            <h3>Suas Respostas</h3>
+                            <svg class="chevron" id="chevron-answers" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 9L12 15L18 9" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="answers-content" id="answersContent">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-whatsapp" id="btnWhatsApp" onclick="openWhatsApp()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                            Conversar com a Sof.IA
+                        </button>
+                        <button type="button" class="btn btn-download" id="btnDownload" onclick="downloadPDF()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Baixar Relatório (PDF)
+                        </button>
+                    </div>
+
+                    <!-- Disclaimer -->
+                    <div class="disclaimer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <p><strong>Aviso Importante:</strong> Este questionário é uma ferramenta de triagem e <strong>não constitui diagnóstico médico</strong>. O resultado apresentado indica apenas uma estimativa de risco baseada em sintomas autorrelatados. Para um diagnóstico definitivo, é essencial consultar um médico especialista que poderá solicitar exames complementares. Nunca tome decisões de saúde baseadas exclusivamente neste resultado.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 Endolife HealthTech | Todos os direitos reservados</p>
+            <p class="footer-links">
+                <a href="#">Política de Privacidade</a> | 
+                <a href="#">Termos de Uso</a> | 
+                <a href="mailto:contato@endolife.health">Contato</a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
