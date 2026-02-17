@@ -1,22 +1,23 @@
 /* ===== CSS Variables ===== */
 :root {
-    --primary-color: #E91E63;
-    --primary-dark: #C2185B;
-    --primary-light: #FCE4EC;
+    --primary-color: #E8686A;
+    --primary-dark: #5C0A2A;
+    --primary-light: #FDE8E8;
+    --primary-gradient: linear-gradient(135deg, #E8686A, #E8955A);
     --secondary-color: #1976D2;
     --success-color: #4CAF50;
     --warning-color: #FF9800;
     --danger-color: #F44336;
     --text-primary: #212121;
-    --text-secondary: #666666;
+    --text-secondary: #555555;
     --text-light: #999999;
     --bg-white: #FFFFFF;
-    --bg-light: #F5F5F5;
+    --bg-light: #F8F8FA;
     --bg-card: #FFFFFF;
-    --border-color: #E0E0E0;
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+    --border-color: #E8E8EC;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
@@ -37,7 +38,7 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #FCE4EC 0%, #F3E5F5 50%, #E8EAF6 100%);
+    background: linear-gradient(135deg, #FDE8E8 0%, #F5E6F0 30%, #E8EAF6 70%, #E0F2F1 100%);
     min-height: 100vh;
     color: var(--text-primary);
     line-height: 1.6;
@@ -57,7 +58,7 @@ body {
 /* ===== Header ===== */
 .header {
     background: var(--bg-white);
-    padding: 16px 24px;
+    padding: 14px 24px 10px;
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
@@ -69,7 +70,29 @@ body {
     align-items: center;
     justify-content: center;
     gap: 16px;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
+}
+
+.logo-endoflow-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.endoflow-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.endoflow-wordmark {
+    font-family: 'Quicksand', 'Inter', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
 }
 
 .logo {
@@ -78,12 +101,8 @@ body {
     object-fit: contain;
 }
 
-.logo-endolife {
-    height: 32px;
-}
-
 .logo-sus {
-    height: 40px;
+    height: 38px;
 }
 
 .logo-divider {
@@ -92,25 +111,19 @@ body {
     background: var(--border-color);
 }
 
-.header-title {
+.header-subtitle {
     text-align: center;
 }
 
-.header-title h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 2px;
-}
-
-.header-title p {
-    font-size: 0.85rem;
+.header-subtitle p {
+    font-size: 0.8rem;
     color: var(--text-secondary);
+    letter-spacing: 0.3px;
 }
 
 /* ===== Progress Bar ===== */
 .progress-container {
-    padding: 20px 24px;
+    padding: 18px 24px;
     background: var(--bg-light);
 }
 
@@ -119,12 +132,12 @@ body {
     background: var(--border-color);
     border-radius: 3px;
     overflow: hidden;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: var(--primary-gradient);
     border-radius: 3px;
     transition: width 0.5s ease;
     width: 25%;
@@ -139,7 +152,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     flex: 1;
 }
 
@@ -157,14 +170,14 @@ body {
     transition: var(--transition);
 }
 
-.step.active .step-circle,
-.step.completed .step-circle {
+.step.active .step-circle {
     background: var(--primary-color);
     color: white;
 }
 
 .step.completed .step-circle {
     background: var(--success-color);
+    color: white;
 }
 
 .step span {
@@ -205,18 +218,22 @@ body {
 }
 
 /* ===== Welcome Screen ===== */
-.welcome-icon {
+.welcome-hero {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
 }
 
-.welcome-icon svg {
-    animation: pulse 2s infinite;
+.welcome-logo-large {
+    margin-bottom: 16px;
+}
+
+.welcome-logo-large svg {
+    animation: pulse 2.5s infinite ease-in-out;
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.9; }
 }
 
 h2 {
@@ -227,11 +244,18 @@ h2 {
     color: var(--text-primary);
 }
 
+.brand-highlight {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .subtitle {
     font-size: 1rem;
     color: var(--text-secondary);
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .description {
@@ -239,20 +263,20 @@ h2 {
     color: var(--text-secondary);
     text-align: center;
     margin-bottom: 24px;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 /* ===== Forms ===== */
 .form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 }
 
 .form-row {
@@ -267,6 +291,13 @@ label {
     color: var(--text-primary);
 }
 
+.form-hint {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-style: italic;
+    margin-top: 2px;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -277,6 +308,7 @@ input[type="number"] {
     font-size: 1rem;
     transition: var(--transition);
     background: var(--bg-white);
+    font-family: inherit;
 }
 
 input:focus {
@@ -302,17 +334,18 @@ input::placeholder {
     align-items: center;
     justify-content: center;
     gap: 10px;
+    font-family: inherit;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: var(--primary-gradient);
     color: white;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 12px rgba(232, 104, 106, 0.35);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 6px 20px rgba(232, 104, 106, 0.45);
 }
 
 .btn-primary:disabled {
@@ -342,22 +375,26 @@ input::placeholder {
     background: #25D366;
     color: white;
     flex: 1;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
 }
 
 .btn-whatsapp:hover {
     background: #128C7E;
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
 }
 
 .btn-download {
     background: var(--secondary-color);
     color: white;
     flex: 1;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
 .btn-download:hover {
     background: #1565C0;
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
 }
 
 /* ===== Consent Cards ===== */
@@ -393,6 +430,7 @@ input::placeholder {
 
 .chevron {
     transition: transform 0.3s ease;
+    flex-shrink: 0;
 }
 
 .chevron.rotated {
@@ -494,7 +532,7 @@ input::placeholder {
 
 .question-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    background: var(--primary-gradient);
     border-radius: 4px;
     transition: width 0.4s ease;
 }
@@ -516,8 +554,21 @@ input::placeholder {
     to { opacity: 1; transform: translateX(0); }
 }
 
+.question-domain {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    background: var(--primary-light);
+    border-radius: 20px;
+    display: inline-block;
+}
+
 .question-card h3 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     margin-bottom: 20px;
     color: var(--text-primary);
@@ -525,7 +576,7 @@ input::placeholder {
 }
 
 .question-emoji {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-right: 8px;
 }
 
@@ -563,6 +614,7 @@ input::placeholder {
     color: var(--text-primary);
     cursor: pointer;
     transition: var(--transition);
+    font-family: inherit;
 }
 
 .scale-btn:hover {
@@ -593,6 +645,7 @@ input::placeholder {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
+    font-family: inherit;
 }
 
 .yesno-btn:hover {
@@ -625,16 +678,45 @@ input::placeholder {
     margin-bottom: 24px;
 }
 
-.results-header h2 {
-    color: var(--success-color);
+.results-logo {
+    margin-bottom: 8px;
 }
 
+.results-header h2 {
+    color: var(--primary-dark);
+    font-size: 1.4rem;
+}
+
+.results-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* ===== Result Cards ===== */
 .result-card {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
     padding: 20px;
     margin-bottom: 16px;
     box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.card-header-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--bg-light);
+}
+
+.card-header-icon h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
 }
 
 /* Risk Card */
@@ -646,15 +728,18 @@ input::placeholder {
 }
 
 .risk-card.low {
-    border-left: 4px solid var(--success-color);
+    border-left: 5px solid var(--success-color);
+    background: linear-gradient(135deg, #FFFFFF, #F1F8E9);
 }
 
 .risk-card.moderate {
-    border-left: 4px solid var(--warning-color);
+    border-left: 5px solid var(--warning-color);
+    background: linear-gradient(135deg, #FFFFFF, #FFF8E1);
 }
 
 .risk-card.high {
-    border-left: 4px solid var(--danger-color);
+    border-left: 5px solid var(--danger-color);
+    background: linear-gradient(135deg, #FFFFFF, #FFEBEE);
 }
 
 .risk-indicator {
@@ -705,17 +790,9 @@ input::placeholder {
     margin-bottom: 8px;
 }
 
-.risk-card.low .risk-info h3 {
-    color: var(--success-color);
-}
-
-.risk-card.moderate .risk-info h3 {
-    color: var(--warning-color);
-}
-
-.risk-card.high .risk-info h3 {
-    color: var(--danger-color);
-}
+.risk-card.low .risk-info h3 { color: var(--success-color); }
+.risk-card.moderate .risk-info h3 { color: var(--warning-color); }
+.risk-card.high .risk-info h3 { color: var(--danger-color); }
 
 .risk-info p {
     font-size: 0.9rem;
@@ -724,17 +801,10 @@ input::placeholder {
 }
 
 /* Explanation Card */
-.explanation-card h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-primary);
-}
-
 .explanation-content p {
     font-size: 0.9rem;
     color: var(--text-secondary);
-    line-height: 1.6;
+    line-height: 1.7;
     margin-bottom: 12px;
 }
 
@@ -744,24 +814,71 @@ input::placeholder {
 }
 
 .explanation-content li {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--text-secondary);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.findings-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--bg-light);
+}
+
+.findings-list li:last-child {
+    border-bottom: none;
+}
+
+/* Differential Diagnosis Card */
+.differential-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.differential-content p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.differential-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.differential-item {
+    padding: 12px 16px;
+    background: var(--bg-light);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary-color);
+}
+
+.differential-item h4 {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.differential-item p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
     line-height: 1.5;
+    margin: 0;
+}
+
+.differential-note {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 8px;
 }
 
 /* Steps Card */
-.steps-card h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-primary);
-}
-
 .steps-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .step-item {
@@ -771,13 +888,18 @@ input::placeholder {
     padding: 12px;
     background: var(--bg-light);
     border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.step-item:hover {
+    background: var(--primary-light);
 }
 
 .step-number {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: var(--primary-color);
+    background: var(--primary-gradient);
     color: white;
     display: flex;
     align-items: center;
@@ -788,9 +910,81 @@ input::placeholder {
 }
 
 .step-text {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--text-primary);
     line-height: 1.5;
+}
+
+/* Doctor Guidance Card */
+.doctor-card {
+    border-left: 4px solid var(--secondary-color);
+    background: linear-gradient(135deg, #FFFFFF, #E3F2FD);
+}
+
+.doctor-intro p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.doctor-tips h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.doctor-tip-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    border: 1px solid rgba(25, 118, 210, 0.1);
+}
+
+.tip-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.doctor-tip-item strong {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.doctor-tip-item p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.doctor-tip-item em {
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+/* Ethics Card */
+.ethics-card {
+    background: linear-gradient(135deg, #FFFFFF, #F3E5F5);
+    border-left: 4px solid var(--primary-dark);
+}
+
+.ethics-content p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+.ethics-content p:last-child {
+    margin-bottom: 0;
 }
 
 /* Answers Card */
@@ -822,7 +1016,7 @@ input::placeholder {
 }
 
 .answers-content.expanded {
-    max-height: 800px;
+    max-height: 1200px;
 }
 
 .answer-item {
@@ -831,17 +1025,33 @@ input::placeholder {
     align-items: flex-start;
     padding: 12px 20px;
     border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
 }
 
 .answer-item:last-child {
     border-bottom: none;
 }
 
+.answer-item.answer-positive {
+    background: #FFF5F5;
+}
+
+.answer-domain {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--primary-color);
+    margin-bottom: 3px;
+}
+
 .answer-question {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--text-secondary);
     flex: 1;
     padding-right: 12px;
+    line-height: 1.4;
 }
 
 .answer-value {
@@ -849,6 +1059,7 @@ input::placeholder {
     font-weight: 600;
     color: var(--text-primary);
     text-align: right;
+    flex-shrink: 0;
 }
 
 .answer-value.positive {
@@ -883,56 +1094,76 @@ input::placeholder {
     font-size: 0.8rem;
     color: var(--text-secondary);
     line-height: 1.6;
+    margin-bottom: 6px;
+}
+
+.disclaimer-ref {
+    font-size: 0.7rem !important;
+    color: var(--text-light) !important;
+    font-style: italic;
+    margin-bottom: 0 !important;
 }
 
 /* ===== Footer ===== */
 .footer {
     padding: 20px 24px;
-    background: var(--bg-light);
+    background: var(--primary-dark);
     text-align: center;
-    border-top: 1px solid var(--border-color);
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.footer-brand span {
+    font-family: 'Quicksand', 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .footer p {
     font-size: 0.75rem;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 6px;
 }
 
 .footer-links a {
-    color: var(--primary-color);
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     font-size: 0.75rem;
 }
 
 .footer-links a:hover {
+    color: white;
     text-decoration: underline;
 }
 
 /* ===== Responsive ===== */
 @media (max-width: 480px) {
     .header {
-        padding: 12px 16px;
+        padding: 10px 16px 8px;
     }
 
-    .logo {
-        height: 28px;
+    .endoflow-icon {
+        width: 26px;
+        height: 26px;
     }
 
-    .logo-endolife {
-        height: 24px;
+    .endoflow-wordmark {
+        font-size: 1.1rem;
     }
 
     .logo-sus {
-        height: 32px;
-    }
-
-    .header-title h1 {
-        font-size: 1.25rem;
+        height: 30px;
     }
 
     .progress-container {
-        padding: 16px;
+        padding: 14px 16px;
     }
 
     .step span {
@@ -968,6 +1199,15 @@ input::placeholder {
 
     .btn {
         width: 100%;
+    }
+
+    .doctor-tip-item {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .tip-icon {
+        margin-top: 0;
     }
 }
 

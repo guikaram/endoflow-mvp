@@ -6,6 +6,7 @@ const userData = {
     age: '',
     email: '',
     whatsapp: '',
+    cep: '',
     answers: {},
     score: 0,
     riskLevel: '',
@@ -21,7 +22,8 @@ const questions = [
         type: 'scale',
         coefficient: 11,
         cutoff: 6,
-        scaleLabels: { min: '0 = Sem dor', max: '10 = Pior dor imaginável' }
+        scaleLabels: { min: '0 = Sem dor', max: '10 = Pior dor imaginável' },
+        domain: 'Dismenorreia'
     },
     {
         id: 'p2',
@@ -30,7 +32,8 @@ const questions = [
         type: 'scale',
         coefficient: 6,
         cutoff: 3,
-        scaleLabels: { min: '0 = Sem dor', max: '10 = Pior dor imaginável' }
+        scaleLabels: { min: '0 = Sem dor', max: '10 = Pior dor imaginável' },
+        domain: 'Dispareunia'
     },
     {
         id: 'p3',
@@ -39,7 +42,8 @@ const questions = [
         type: 'scale',
         coefficient: 14,
         cutoff: 5,
-        scaleLabels: { min: '0 = Sem desconforto', max: '10 = Desconforto intenso' }
+        scaleLabels: { min: '0 = Sem desconforto', max: '10 = Desconforto intenso' },
+        domain: 'Sintomas Intestinais'
     },
     {
         id: 'p4',
@@ -47,7 +51,8 @@ const questions = [
         emoji: '🚽',
         type: 'yesno',
         coefficient: 12,
-        cutoff: true
+        cutoff: true,
+        domain: 'Sintomas Urinários'
     },
     {
         id: 'p5',
@@ -55,7 +60,8 @@ const questions = [
         emoji: '👨‍👩‍👧',
         type: 'yesno',
         coefficient: 14,
-        cutoff: true
+        cutoff: true,
+        domain: 'Histórico Familiar'
     },
     {
         id: 'p6',
@@ -63,7 +69,8 @@ const questions = [
         emoji: '🤰',
         type: 'yesno',
         coefficient: 6,
-        cutoff: true
+        cutoff: true,
+        domain: 'Infertilidade Primária'
     },
     {
         id: 'p7',
@@ -71,7 +78,8 @@ const questions = [
         emoji: '😴',
         type: 'yesno',
         coefficient: 7,
-        cutoff: true
+        cutoff: true,
+        domain: 'Fadiga Crônica'
     },
     {
         id: 'p8',
@@ -79,7 +87,8 @@ const questions = [
         emoji: '🩸',
         type: 'yesno',
         coefficient: 7,
-        cutoff: true
+        cutoff: true,
+        domain: 'Sangramento Intenso'
     }
 ];
 
@@ -115,6 +124,7 @@ function initRegistrationForm() {
         userData.age = document.getElementById('age').value;
         userData.email = document.getElementById('email').value.trim();
         userData.whatsapp = document.getElementById('whatsapp').value.trim();
+        userData.cep = document.getElementById('cep').value.trim();
         
         goToStep(2);
     });
@@ -131,6 +141,19 @@ function initRegistrationForm() {
             value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
         } else if (value.length > 0) {
             value = `(${value}`;
+        }
+        
+        e.target.value = value;
+    });
+
+    // CEP mask
+    const cepInput = document.getElementById('cep');
+    cepInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 8) value = value.slice(0, 8);
+        
+        if (value.length > 5) {
+            value = `${value.slice(0, 5)}-${value.slice(5)}`;
         }
         
         e.target.value = value;
@@ -168,23 +191,13 @@ function startTest() {
 function goToStep(step) {
     currentStep = step;
     
-    // Hide all screens
     Object.values(screens).forEach(screen => screen.classList.remove('active'));
     
-    // Show current screen
     switch(step) {
-        case 1:
-            screens.welcome.classList.add('active');
-            break;
-        case 2:
-            screens.consent.classList.add('active');
-            break;
-        case 3:
-            screens.questionnaire.classList.add('active');
-            break;
-        case 4:
-            screens.results.classList.add('active');
-            break;
+        case 1: screens.welcome.classList.add('active'); break;
+        case 2: screens.consent.classList.add('active'); break;
+        case 3: screens.questionnaire.classList.add('active'); break;
+        case 4: screens.results.classList.add('active'); break;
     }
     
     updateProgress();
@@ -192,11 +205,9 @@ function goToStep(step) {
 }
 
 function updateProgress() {
-    // Update progress bar
     const progressPercent = (currentStep / 4) * 100;
     progressFill.style.width = `${progressPercent}%`;
     
-    // Update step indicators
     steps.forEach((step, index) => {
         const stepNum = index + 1;
         step.classList.remove('active', 'completed');
@@ -216,11 +227,9 @@ function renderQuestion() {
     const questionNum = document.getElementById('questionNumber');
     const progressBar = document.getElementById('questionProgressFill');
     
-    // Update progress
     questionNum.textContent = `Pergunta ${currentQuestion + 1} de ${questions.length}`;
     progressBar.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
     
-    // Render question
     let inputHTML = '';
     
     if (question.type === 'scale') {
@@ -242,21 +251,21 @@ function renderQuestion() {
         inputHTML = `
             <div class="yesno-container">
                 <button type="button" class="yesno-btn ${userData.answers[question.id] === true ? 'selected' : ''}" 
-                        onclick="selectYesNo('${question.id}', true)">Sim</button>
+                        onclick="selectYesNo('${question.id}', true, this)">Sim</button>
                 <button type="button" class="yesno-btn ${userData.answers[question.id] === false ? 'selected' : ''}" 
-                        onclick="selectYesNo('${question.id}', false)">Não</button>
+                        onclick="selectYesNo('${question.id}', false, this)">Não</button>
             </div>
         `;
     }
     
     container.innerHTML = `
         <div class="question-card">
+            <div class="question-domain">${question.domain}</div>
             <h3><span class="question-emoji">${question.emoji}</span>${currentQuestion + 1}. ${question.text}</h3>
             ${inputHTML}
         </div>
     `;
     
-    // Update navigation buttons
     document.getElementById('btnPrevQuestion').disabled = currentQuestion === 0;
     
     const nextBtn = document.getElementById('btnNextQuestion');
@@ -270,7 +279,6 @@ function renderQuestion() {
 function selectScale(questionId, value) {
     userData.answers[questionId] = value;
     
-    // Update UI
     document.querySelectorAll('.scale-btn').forEach(btn => {
         btn.classList.remove('selected');
         if (parseInt(btn.textContent) === value) {
@@ -279,14 +287,13 @@ function selectScale(questionId, value) {
     });
 }
 
-function selectYesNo(questionId, value) {
+function selectYesNo(questionId, value, element) {
     userData.answers[questionId] = value;
     
-    // Update UI
     document.querySelectorAll('.yesno-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
-    event.target.classList.add('selected');
+    element.classList.add('selected');
 }
 
 function prevQuestion() {
@@ -299,7 +306,6 @@ function prevQuestion() {
 function nextQuestion() {
     const question = questions[currentQuestion];
     
-    // Validate answer
     if (userData.answers[question.id] === undefined) {
         alert('Por favor, responda a pergunta antes de continuar.');
         return;
@@ -335,7 +341,6 @@ function calculateScore() {
     userData.score = totalScore;
     userData.timestamp = new Date();
     
-    // Determine risk level
     if (totalScore < 18) {
         userData.riskLevel = 'low';
     } else if (totalScore < 25) {
@@ -345,12 +350,27 @@ function calculateScore() {
     }
 }
 
+// ===== Helper: check positive answers =====
+function getPositiveAnswers() {
+    const positives = {};
+    questions.forEach(q => {
+        const answer = userData.answers[q.id];
+        if (q.type === 'scale') {
+            positives[q.id] = answer >= q.cutoff;
+        } else {
+            positives[q.id] = answer === true;
+        }
+    });
+    return positives;
+}
+
 // ===== Results Display =====
 function showResults() {
     goToStep(4);
     
-    // User name
-    document.getElementById('userName').textContent = `Olá, ${userData.name.split(' ')[0]}`;
+    const firstName = userData.name.split(' ')[0];
+    document.getElementById('userName').textContent = `Olá, ${firstName}`;
+    document.getElementById('resultsDate').textContent = `Relatório gerado em ${userData.timestamp.toLocaleDateString('pt-BR')} às ${userData.timestamp.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
     
     // Risk card
     const riskCard = document.getElementById('riskCard');
@@ -379,76 +399,174 @@ function showResults() {
     riskLevel.textContent = riskData[userData.riskLevel].level;
     riskDescription.textContent = riskData[userData.riskLevel].description;
     
-    // Explanation
+    // Render all sections
     renderExplanation();
-    
-    // Next steps
+    renderDifferentialDiagnosis();
     renderNextSteps();
-    
-    // Answers summary
+    renderDoctorGuidance();
     renderAnswersSummary();
 }
 
 function renderExplanation() {
     const container = document.getElementById('explanationContent');
+    const positives = getPositiveAnswers();
+    const hasBleeding = positives['p8'];
+    const hasUrinary = positives['p4'];
+    const hasIntestinal = positives['p3'];
+    const hasFamilyHistory = positives['p5'];
+    const hasInfertility = positives['p6'];
+    
+    let specificFindings = '';
+    
+    // Build personalized findings based on answers
+    if (positives['p1']) {
+        specificFindings += `<li>Você relatou <strong>dor menstrual significativa (dismenorreia)</strong>, um dos sintomas mais frequentes da <strong>endometriose</strong>. Dores menstruais intensas que limitam suas atividades diárias merecem investigação médica.</li>`;
+    }
+    if (positives['p2']) {
+        specificFindings += `<li>A <strong>dor durante a relação sexual (dispareunia profunda)</strong> que você relatou pode estar associada a focos de <strong>endometriose</strong> em ligamentos uterossacros ou no fundo de saco de Douglas.</li>`;
+    }
+    if (hasIntestinal) {
+        specificFindings += `<li>Os <strong>sintomas intestinais cíclicos</strong> que você descreveu podem indicar <strong>endometriose intestinal</strong>, mas também podem estar relacionados a outras condições como <strong>Síndrome do Intestino Irritável (SII)</strong> ou <strong>colites</strong>.</li>`;
+    }
+    if (hasUrinary) {
+        specificFindings += `<li>Os <strong>sintomas urinários</strong> relatados podem sugerir <strong>endometriose do trato urinário</strong>, mas também devem ser diferenciados de <strong>cistite intersticial</strong>, <strong>infecções urinárias recorrentes</strong> e outras <strong>doenças urológicas</strong>.</li>`;
+    }
+    if (hasFamilyHistory) {
+        specificFindings += `<li>O <strong>histórico familiar positivo</strong> é um fator de risco importante. Mulheres com parentes de primeiro grau com <strong>endometriose</strong> têm risco até 7 vezes maior de desenvolver a doença.</li>`;
+    }
+    if (hasInfertility) {
+        specificFindings += `<li>A <strong>infertilidade primária</strong> que você relatou pode estar associada à <strong>endometriose</strong>, que é responsável por até 50% dos casos de dificuldade para engravidar.</li>`;
+    }
+    if (positives['p7']) {
+        specificFindings += `<li>A <strong>fadiga crônica</strong> é um sintoma frequentemente subestimado, mas está presente em até 50% das mulheres com <strong>endometriose</strong>. Pode também estar relacionada a <strong>anemia</strong>, <strong>hipotireoidismo</strong> ou <strong>fibromialgia</strong>.</li>`;
+    }
+    if (hasBleeding) {
+        specificFindings += `<li>O <strong>sangramento menstrual intenso (menorragia)</strong> que você relatou, além de estar associado à <strong>endometriose</strong>, é um dos principais sintomas da <strong>adenomiose</strong> — uma condição em que o tecido endometrial cresce dentro da parede muscular do útero. A <strong>adenomiose</strong> frequentemente coexiste com a <strong>endometriose</strong> e também pode causar dor pélvica e cólicas intensas. Outras causas possíveis incluem <strong>miomas uterinos</strong> e <strong>distúrbios de coagulação</strong>.</li>`;
+    }
     
     const explanations = {
         low: `
-            <p>O Score Endoflow é uma ferramenta de triagem baseada em evidências científicas que avalia sintomas comuns da endometriose. Sua pontuação de <strong>${userData.score} pontos</strong> está abaixo do limiar de 18 pontos.</p>
-            <p>Isso significa que, com base nas suas respostas, você apresenta poucos dos sintomas tipicamente associados à endometriose. No entanto, é importante lembrar que:</p>
+            <p>O Score Endoflow é uma ferramenta de triagem baseada em evidências científicas que avalia sintomas comuns da <strong>endometriose</strong>. Sua pontuação de <strong>${userData.score} pontos</strong> está abaixo do limiar de 18 pontos, o que sugere um risco menor.</p>
+            ${specificFindings ? `<p>Com base nas suas respostas, identificamos os seguintes pontos de atenção:</p><ul class="findings-list">${specificFindings}</ul>` : ''}
+            <p>Mesmo com risco baixo a moderado, é importante lembrar que:</p>
             <ul>
-                <li>A endometriose pode se manifestar de formas diferentes em cada pessoa</li>
+                <li>A <strong>endometriose</strong> pode se manifestar de formas diferentes em cada pessoa</li>
                 <li>Sintomas podem mudar ao longo do tempo</li>
-                <li>Este resultado não exclui a possibilidade de outras condições</li>
+                <li>Este resultado não exclui a possibilidade de outras condições ginecológicas</li>
             </ul>
             <p>Continue acompanhando seus sintomas e converse com seu médico em suas consultas de rotina.</p>
         `,
         moderate: `
-            <p>O Score Endoflow é uma ferramenta de triagem baseada em evidências científicas. Sua pontuação de <strong>${userData.score} pontos</strong> está entre 18 e 24 pontos, indicando um risco elevado.</p>
-            <p>Isso significa que você apresenta alguns sintomas que são frequentemente associados à endometriose. Este resultado merece atenção porque:</p>
-            <ul>
-                <li>Você relatou sintomas que são comuns em mulheres com endometriose</li>
-                <li>Uma avaliação médica especializada pode ajudar a esclarecer o quadro</li>
-                <li>O diagnóstico precoce pode melhorar significativamente a qualidade de vida</li>
-            </ul>
-            <p>Recomendamos que você agende uma consulta com um ginecologista, preferencialmente com experiência em endometriose.</p>
+            <p>O Score Endoflow é uma ferramenta de triagem baseada em evidências científicas. Sua pontuação de <strong>${userData.score} pontos</strong> está entre 18 e 24 pontos, indicando um <strong>risco elevado</strong> para <strong>endometriose</strong>.</p>
+            <p>Com base nas suas respostas, identificamos os seguintes achados relevantes:</p>
+            <ul class="findings-list">${specificFindings || '<li>Você apresentou uma combinação de sintomas que, juntos, elevam o risco para endometriose.</li>'}</ul>
+            <p>Este resultado merece atenção porque o diagnóstico precoce da <strong>endometriose</strong> pode melhorar significativamente a qualidade de vida e prevenir complicações a longo prazo.</p>
         `,
         high: `
-            <p>O Score Endoflow é uma ferramenta de triagem baseada em evidências científicas. Sua pontuação de <strong>${userData.score} pontos</strong> está acima de 25 pontos, indicando um risco muito elevado.</p>
-            <p>Isso significa que você apresenta vários sintomas fortemente associados à endometriose. Este resultado é importante porque:</p>
-            <ul>
-                <li>Você relatou múltiplos sintomas característicos da condição</li>
-                <li>O diagnóstico precoce pode prevenir complicações e melhorar sua qualidade de vida</li>
-                <li>Existem tratamentos eficazes disponíveis que podem ajudar a controlar os sintomas</li>
-            </ul>
-            <p><strong>Recomendamos fortemente</strong> que você procure um médico especialista o mais breve possível para uma avaliação completa.</p>
+            <p>O Score Endoflow é uma ferramenta de triagem baseada em evidências científicas. Sua pontuação de <strong>${userData.score} pontos</strong> está acima de 25 pontos, indicando um <strong>risco muito elevado</strong> para <strong>endometriose</strong>.</p>
+            <p>Com base nas suas respostas, identificamos os seguintes achados importantes:</p>
+            <ul class="findings-list">${specificFindings || '<li>Você apresentou múltiplos sintomas fortemente associados à endometriose.</li>'}</ul>
+            <p><strong>Recomendamos fortemente</strong> que você procure um médico especialista o mais breve possível. O diagnóstico precoce da <strong>endometriose</strong> é fundamental para iniciar o tratamento adequado e preservar sua qualidade de vida e fertilidade.</p>
         `
     };
     
     container.innerHTML = explanations[userData.riskLevel];
 }
 
+function renderDifferentialDiagnosis() {
+    const container = document.getElementById('differentialContent');
+    const card = document.getElementById('differentialCard');
+    const positives = getPositiveAnswers();
+    
+    let differentials = [];
+    
+    if (positives['p3']) {
+        differentials.push({
+            condition: 'Síndrome do Intestino Irritável (SII) e Colites',
+            description: 'Sintomas intestinais cíclicos podem mimetizar ou coexistir com a endometriose. A SII e as colites inflamatórias (como Doença de Crohn e Retocolite Ulcerativa) podem causar sintomas semelhantes.'
+        });
+    }
+    if (positives['p4']) {
+        differentials.push({
+            condition: 'Doenças Urológicas',
+            description: 'Cistite intersticial, infecções urinárias recorrentes e outras condições do trato urinário podem apresentar sintomas semelhantes aos da endometriose vesical.'
+        });
+    }
+    if (positives['p8']) {
+        differentials.push({
+            condition: 'Adenomiose',
+            description: 'Condição em que o tecido endometrial cresce na parede muscular do útero. Frequentemente coexiste com a endometriose e causa sangramento intenso, cólicas e aumento do volume uterino.'
+        });
+        differentials.push({
+            condition: 'Miomas Uterinos',
+            description: 'Tumores benignos do útero que podem causar sangramento menstrual intenso, dor pélvica e sensação de pressão.'
+        });
+    }
+    if (positives['p7']) {
+        differentials.push({
+            condition: 'Hipotireoidismo e Anemia',
+            description: 'Fadiga crônica pode estar relacionada a distúrbios da tireoide ou anemia por deficiência de ferro, especialmente em mulheres com sangramento menstrual intenso.'
+        });
+    }
+    if (positives['p6']) {
+        differentials.push({
+            condition: 'Outras Causas de Infertilidade',
+            description: 'Distúrbios ovulatórios (como Síndrome dos Ovários Policísticos), alterações tubárias e fatores masculinos também devem ser investigados.'
+        });
+    }
+    if (positives['p1'] || positives['p2']) {
+        differentials.push({
+            condition: 'Dor Pélvica Crônica de Outras Causas',
+            description: 'Condições como aderências pélvicas, neuropatia pudenda, fibromialgia e disfunções do assoalho pélvico podem causar sintomas semelhantes.'
+        });
+    }
+    
+    if (differentials.length > 0) {
+        card.style.display = 'block';
+        
+        let html = `<p>Com base nos seus sintomas, é importante que seu médico também considere as seguintes condições que podem apresentar sintomas semelhantes ou coexistir com a <strong>endometriose</strong>:</p>`;
+        html += '<div class="differential-list">';
+        differentials.forEach(d => {
+            html += `
+                <div class="differential-item">
+                    <h4><strong>${d.condition}</strong></h4>
+                    <p>${d.description}</p>
+                </div>
+            `;
+        });
+        html += '</div>';
+        html += `<p class="differential-note"><em>Estas condições não são mutuamente exclusivas — é possível ter mais de uma ao mesmo tempo. Somente um profissional de saúde pode fazer o diagnóstico correto após avaliação clínica e exames complementares.</em></p>`;
+        
+        container.innerHTML = html;
+    }
+}
+
 function renderNextSteps() {
     const container = document.getElementById('stepsList');
+    const positives = getPositiveAnswers();
     
     const steps = {
         low: [
-            'Continue acompanhando seus sintomas e anote qualquer mudança',
-            'Mantenha suas consultas ginecológicas de rotina em dia',
-            'Se os sintomas piorarem, procure um médico para reavaliação',
-            'Compartilhe este relatório com seu médico na próxima consulta'
+            'Continue acompanhando seus sintomas e anote qualquer mudança em um diário menstrual',
+            'Mantenha suas consultas ginecológicas de rotina em dia (pelo menos uma vez ao ano)',
+            'Se os sintomas piorarem ou novos sintomas surgirem, procure um médico para reavaliação',
+            'Compartilhe este relatório com seu médico na próxima consulta para que fique registrado no seu prontuário',
+            'Cuide da sua saúde integral: alimentação equilibrada, exercícios regulares e manejo do estresse'
         ],
         moderate: [
-            'Agende uma consulta com um ginecologista, preferencialmente especialista em endometriose',
-            'Leve este relatório para a consulta e discuta seus sintomas em detalhes',
-            'O médico pode solicitar exames de imagem (ultrassom transvaginal ou ressonância magnética)',
-            'Anote a frequência e intensidade dos seus sintomas até a consulta'
+            'Agende uma consulta com um ginecologista, preferencialmente com experiência em endometriose',
+            'Imprima ou envie este relatório para o médico antes da consulta — ele contém informações úteis para a avaliação',
+            'Comece um diário de sintomas anotando: datas, intensidade da dor (0-10), localização e relação com o ciclo menstrual',
+            'O médico poderá solicitar exames de imagem como ultrassom transvaginal com preparo intestinal ou ressonância magnética da pelve',
+            'Não hesite em buscar uma segunda opinião caso sinta que seus sintomas não estão sendo levados a sério'
         ],
         high: [
-            'Procure um médico especialista em endometriose o mais breve possível',
-            'Leve este relatório e descreva detalhadamente seus sintomas',
-            'Prepare-se para possíveis exames de imagem e avaliação clínica completa',
-            'Não hesite em buscar uma segunda opinião se necessário'
+            'Procure um médico especialista em endometriose o mais breve possível — a demora no diagnóstico pode agravar a condição',
+            'Leve este relatório impresso ou digital para a consulta e descreva detalhadamente cada sintoma',
+            'Prepare-se para possíveis exames: ultrassom transvaginal com preparo intestinal, ressonância magnética da pelve e exames laboratoriais',
+            'Anote todas as suas dúvidas antes da consulta para não esquecer de perguntar ao médico',
+            'Se necessário, busque uma segunda opinião — você tem esse direito e é uma prática recomendada em casos complexos',
+            'Considere buscar apoio emocional: grupos de apoio para mulheres com endometriose podem ajudar no enfrentamento'
         ]
     };
     
@@ -458,6 +576,68 @@ function renderNextSteps() {
             <div class="step-text">${step}</div>
         </div>
     `).join('');
+}
+
+function renderDoctorGuidance() {
+    const container = document.getElementById('doctorContent');
+    const positives = getPositiveAnswers();
+    
+    let symptomsToMention = [];
+    if (positives['p1']) symptomsToMention.push('dor menstrual intensa');
+    if (positives['p2']) symptomsToMention.push('dor na relação sexual');
+    if (positives['p3']) symptomsToMention.push('sintomas intestinais cíclicos');
+    if (positives['p4']) symptomsToMention.push('sintomas urinários');
+    if (positives['p5']) symptomsToMention.push('histórico familiar de endometriose');
+    if (positives['p6']) symptomsToMention.push('dificuldade para engravidar');
+    if (positives['p7']) symptomsToMention.push('fadiga crônica');
+    if (positives['p8']) symptomsToMention.push('sangramento menstrual intenso');
+    
+    let html = `
+        <div class="doctor-intro">
+            <p>Sabemos que muitas mulheres enfrentam dificuldades para serem ouvidas em consultas médicas quando relatam sintomas de dor pélvica e menstrual. Este relatório foi criado para <strong>fortalecer a sua voz</strong> e ajudar na comunicação com seu médico.</p>
+        </div>
+        
+        <div class="doctor-tips">
+            <h4>Dicas para a consulta:</h4>
+            <div class="doctor-tip-item">
+                <span class="tip-icon">📋</span>
+                <div>
+                    <strong>Apresente este relatório</strong>
+                    <p>Mostre este documento ao seu médico logo no início da consulta. Diga: <em>"Fiz uma triagem validada cientificamente e gostaria de discutir os resultados."</em></p>
+                </div>
+            </div>
+            <div class="doctor-tip-item">
+                <span class="tip-icon">🗣️</span>
+                <div>
+                    <strong>Descreva seus sintomas com clareza</strong>
+                    <p>Com base nas suas respostas, os principais pontos a mencionar são: ${symptomsToMention.length > 0 ? '<strong>' + symptomsToMention.join(', ') + '</strong>' : 'seus sintomas gerais'}.</p>
+                </div>
+            </div>
+            <div class="doctor-tip-item">
+                <span class="tip-icon">📅</span>
+                <div>
+                    <strong>Relate a cronologia</strong>
+                    <p>Informe há quanto tempo os sintomas começaram, se pioram durante a menstruação e como afetam sua rotina diária, trabalho e relacionamentos.</p>
+                </div>
+            </div>
+            <div class="doctor-tip-item">
+                <span class="tip-icon">❓</span>
+                <div>
+                    <strong>Faça perguntas</strong>
+                    <p>Pergunte ao médico: <em>"Existe a possibilidade de eu ter endometriose${positives['p8'] ? ' ou adenomiose' : ''}?"</em>, <em>"Quais exames são indicados para investigar?"</em> e <em>"Quais são as opções de tratamento?"</em></p>
+                </div>
+            </div>
+            <div class="doctor-tip-item">
+                <span class="tip-icon">🛡️</span>
+                <div>
+                    <strong>Seus direitos como paciente</strong>
+                    <p>Você tem direito a ser ouvida, a receber explicações claras sobre seu diagnóstico e tratamento, e a buscar uma segunda opinião. Se sentir que seus sintomas estão sendo minimizados, você pode e deve procurar outro profissional.</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
 }
 
 function renderAnswersSummary() {
@@ -477,8 +657,11 @@ function renderAnswersSummary() {
         }
         
         return `
-            <div class="answer-item">
-                <div class="answer-question">${question.emoji} ${question.text}</div>
+            <div class="answer-item ${isPositive ? 'answer-positive' : ''}">
+                <div class="answer-question">
+                    <span class="answer-domain">${question.domain}</span>
+                    ${question.emoji} ${question.text}
+                </div>
                 <div class="answer-value ${isPositive ? 'positive' : ''}">${displayAnswer}</div>
             </div>
         `;
@@ -505,12 +688,21 @@ function openWhatsApp() {
         high: 'Muito Elevado'
     };
     
+    const positives = getPositiveAnswers();
+    let mainSymptoms = [];
+    if (positives['p1']) mainSymptoms.push('dor menstrual intensa');
+    if (positives['p2']) mainSymptoms.push('dor na relação sexual');
+    if (positives['p3']) mainSymptoms.push('sintomas intestinais');
+    if (positives['p4']) mainSymptoms.push('sintomas urinários');
+    if (positives['p8']) mainSymptoms.push('sangramento intenso');
+    
     const message = encodeURIComponent(
         `Olá Sof.IA! 👋\n\n` +
         `Acabei de fazer o teste de triagem Endoflow e gostaria de conversar sobre meu resultado.\n\n` +
         `📊 *Meu Score:* ${userData.score} pontos\n` +
-        `⚠️ *Nível de Risco:* ${riskTexts[userData.riskLevel]}\n\n` +
-        `Pode me ajudar a entender melhor o que isso significa?`
+        `⚠️ *Nível de Risco:* ${riskTexts[userData.riskLevel]}\n` +
+        `${mainSymptoms.length > 0 ? `🔍 *Principais sintomas:* ${mainSymptoms.join(', ')}\n` : ''}` +
+        `\nPode me ajudar a entender melhor o que isso significa e quais os próximos passos?`
     );
     
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
@@ -533,64 +725,84 @@ function downloadPDF() {
         high: [244, 67, 54]
     };
     
+    const positives = getPositiveAnswers();
+    
     // Header
-    doc.setFillColor(233, 30, 99);
+    doc.setFillColor(92, 10, 42);
     doc.rect(0, 0, 210, 40, 'F');
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24);
+    doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
-    doc.text('Endoflow', 105, 20, { align: 'center' });
+    doc.text('Endoflow', 105, 18, { align: 'center' });
     
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
-    doc.text('Relatório de Triagem para Suspeita de Endometriose', 105, 30, { align: 'center' });
+    doc.text('Relatório de Triagem para Suspeita de Endometriose', 105, 27, { align: 'center' });
+    
+    doc.setFontSize(8);
+    doc.text('Endolife HealthTech | Hub Inova UNIMES | SUS Digital', 105, 35, { align: 'center' });
     
     // User info
     doc.setTextColor(33, 33, 33);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text('Dados da Paciente', 20, 55);
+    doc.text('Dados da Paciente', 20, 52);
     
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(`Nome: ${userData.name}`, 20, 63);
-    doc.text(`Idade: ${userData.age} anos`, 20, 70);
-    doc.text(`Data do Teste: ${userData.timestamp.toLocaleDateString('pt-BR')} às ${userData.timestamp.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`, 20, 77);
+    doc.text(`Nome: ${userData.name}`, 20, 60);
+    doc.text(`Idade: ${userData.age} anos`, 20, 67);
+    doc.text(`CEP: ${userData.cep}`, 120, 60);
+    doc.text(`Data: ${userData.timestamp.toLocaleDateString('pt-BR')} às ${userData.timestamp.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`, 120, 67);
+    
+    // Divider
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, 72, 190, 72);
     
     // Result box
     const riskColor = riskColors[userData.riskLevel];
     doc.setFillColor(riskColor[0], riskColor[1], riskColor[2]);
-    doc.roundedRect(20, 85, 170, 35, 3, 3, 'F');
+    doc.roundedRect(20, 76, 170, 30, 3, 3, 'F');
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('RESULTADO DA TRIAGEM', 105, 97, { align: 'center' });
+    doc.text('RESULTADO DA TRIAGEM', 105, 88, { align: 'center' });
     
-    doc.setFontSize(18);
-    doc.text(`Score: ${userData.score} pontos | Risco: ${riskTexts[userData.riskLevel]}`, 105, 112, { align: 'center' });
+    doc.setFontSize(16);
+    doc.text(`Score: ${userData.score} pontos | Risco: ${riskTexts[userData.riskLevel]}`, 105, 100, { align: 'center' });
     
     // Explanation
+    let yPos = 118;
     doc.setTextColor(33, 33, 33);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text('O que isso significa?', 20, 135);
+    doc.text('O que isso significa?', 20, yPos);
     
+    yPos += 8;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     
-    const explanationTexts = {
-        low: 'Sua pontuação indica um risco baixo a moderado para endometriose. Isso não significa que você não tenha a condição, mas os sintomas relatados são menos indicativos. Continue acompanhando seus sintomas e mantenha suas consultas de rotina.',
-        moderate: 'Sua pontuação indica um risco elevado para endometriose. Recomendamos que você procure um médico especialista para uma avaliação mais detalhada. O diagnóstico precoce pode melhorar significativamente a qualidade de vida.',
-        high: 'Sua pontuação indica um risco muito elevado para endometriose. É importante que você procure um médico especialista o mais breve possível para investigação diagnóstica. Existem tratamentos eficazes disponíveis.'
-    };
+    let explanationParts = [];
+    explanationParts.push(`Sua pontuacao de ${userData.score} pontos indica risco ${riskTexts[userData.riskLevel].toLowerCase()} para endometriose.`);
     
-    const splitText = doc.splitTextToSize(explanationTexts[userData.riskLevel], 170);
-    doc.text(splitText, 20, 143);
+    if (positives['p1']) explanationParts.push('Voce relatou dor menstrual significativa (dismenorreia).');
+    if (positives['p2']) explanationParts.push('A dor durante a relacao sexual (dispareunia) pode estar associada a endometriose.');
+    if (positives['p3']) explanationParts.push('Sintomas intestinais ciclicos podem indicar endometriose intestinal ou condicoes como SII e colites.');
+    if (positives['p4']) explanationParts.push('Sintomas urinarios devem ser diferenciados de cistite intersticial e doencas urologicas.');
+    if (positives['p5']) explanationParts.push('Historico familiar positivo aumenta o risco em ate 7 vezes.');
+    if (positives['p6']) explanationParts.push('A infertilidade pode estar associada a endometriose (ate 50% dos casos).');
+    if (positives['p7']) explanationParts.push('Fadiga cronica esta presente em ate 50% das mulheres com endometriose.');
+    if (positives['p8']) explanationParts.push('Sangramento intenso pode indicar adenomiose, condicao que frequentemente coexiste com endometriose.');
+    
+    const fullExplanation = explanationParts.join(' ');
+    const splitText = doc.splitTextToSize(fullExplanation, 170);
+    doc.text(splitText, 20, yPos);
+    yPos += splitText.length * 4 + 6;
     
     // Answers summary
-    let yPos = 165;
+    if (yPos > 240) { doc.addPage(); yPos = 20; }
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.text('Resumo das Respostas', 20, yPos);
@@ -606,47 +818,56 @@ function downloadPDF() {
         if (question.type === 'scale') {
             displayAnswer = `${answer}/10`;
         } else {
-            displayAnswer = answer ? 'Sim' : 'Não';
+            displayAnswer = answer ? 'Sim' : 'Nao';
         }
         
-        const questionText = doc.splitTextToSize(`${index + 1}. ${question.text}`, 140);
+        if (yPos > 270) { doc.addPage(); yPos = 20; }
+        
+        const questionText = doc.splitTextToSize(`${index + 1}. [${question.domain}] ${question.text}`, 140);
         doc.text(questionText, 20, yPos);
         doc.text(displayAnswer, 175, yPos, { align: 'right' });
         
         yPos += questionText.length * 4 + 3;
-        
-        if (yPos > 270) {
-            doc.addPage();
-            yPos = 20;
-        }
     });
     
+    // Doctor guidance
+    yPos += 6;
+    if (yPos > 240) { doc.addPage(); yPos = 20; }
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Como Informar Este Relatorio ao Seu Medico', 20, yPos);
+    
+    yPos += 8;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    
+    const doctorText = 'Apresente este documento ao seu medico no inicio da consulta. Descreva seus sintomas com clareza, informe ha quanto tempo eles ocorrem e como afetam sua rotina. Voce tem direito a ser ouvida e a buscar uma segunda opiniao se necessario.';
+    const splitDoctor = doc.splitTextToSize(doctorText, 170);
+    doc.text(splitDoctor, 20, yPos);
+    yPos += splitDoctor.length * 4 + 6;
+    
     // Disclaimer
-    yPos += 10;
-    if (yPos > 250) {
-        doc.addPage();
-        yPos = 20;
-    }
+    if (yPos > 250) { doc.addPage(); yPos = 20; }
     
     doc.setFillColor(255, 248, 225);
-    doc.roundedRect(20, yPos, 170, 25, 2, 2, 'F');
+    doc.roundedRect(20, yPos, 170, 28, 2, 2, 'F');
     
     doc.setTextColor(255, 152, 0);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.text('⚠️ AVISO IMPORTANTE', 25, yPos + 7);
+    doc.text('AVISO IMPORTANTE', 25, yPos + 7);
     
     doc.setTextColor(102, 102, 102);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
-    const disclaimerText = 'Este questionário é uma ferramenta de triagem e NÃO constitui diagnóstico médico. O resultado indica apenas uma estimativa de risco baseada em sintomas autorrelatados. Para um diagnóstico definitivo, consulte um médico especialista.';
+    const disclaimerText = 'Este questionario e uma ferramenta de triagem e NAO constitui diagnostico medico. O resultado indica apenas uma estimativa de risco baseada em sintomas autorrelatados. Para um diagnostico definitivo, consulte um medico especialista. Este relatorio foi gerado pelo Endoflow (Endolife HealthTech / Hub Inova UNIMES) e seus dados sao protegidos pela LGPD.';
     const splitDisclaimer = doc.splitTextToSize(disclaimerText, 160);
     doc.text(splitDisclaimer, 25, yPos + 13);
     
     // Footer
     doc.setTextColor(153, 153, 153);
-    doc.setFontSize(8);
-    doc.text('© 2026 Endolife HealthTech | Endoflow - Triagem para Suspeita de Endometriose', 105, 290, { align: 'center' });
+    doc.setFontSize(7);
+    doc.text('© 2026 Endolife HealthTech | Endoflow - Triagem para Suspeita de Endometriose | SUS Digital', 105, 290, { align: 'center' });
     
     // Save
     const fileName = `Endoflow_Relatorio_${userData.name.split(' ')[0]}_${userData.timestamp.toISOString().split('T')[0]}.pdf`;

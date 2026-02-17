@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -15,12 +15,28 @@
         <!-- Header -->
         <header class="header">
             <div class="header-logos">
-                <img src="logo-endolife.png" alt="Endo Life" class="logo logo-endolife">
+                <!-- Endoflow Logo SVG -->
+                <div class="logo-endoflow-brand">
+                    <svg class="endoflow-icon" width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="45" r="32" stroke="url(#grad1)" stroke-width="4" fill="none"/>
+                        <line x1="30" y1="35" x2="65" y2="35" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="30" y1="45" x2="60" y2="45" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="30" y1="55" x2="55" y2="55" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="68" cy="55" r="4" fill="url(#grad1)"/>
+                        <path d="M65 70 Q50 85 35 70" stroke="url(#grad1)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#E8686A"/>
+                                <stop offset="100%" style="stop-color:#E8955A"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="endoflow-wordmark">endoflow</span>
+                </div>
                 <div class="logo-divider"></div>
                 <img src="logo-sus-digital.png" alt="SUS Digital" class="logo logo-sus">
             </div>
-            <div class="header-title">
-                <h1>Endoflow</h1>
+            <div class="header-subtitle">
                 <p>Triagem para Suspeita de Endometriose</p>
             </div>
         </header>
@@ -55,15 +71,27 @@
             <!-- Step 1: Welcome & Registration -->
             <section class="screen active" id="screen-welcome">
                 <div class="screen-content">
-                    <div class="welcome-icon">
-                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                            <circle cx="40" cy="40" r="38" stroke="#E91E63" stroke-width="4"/>
-                            <path d="M40 20C40 20 25 32 25 42C25 52 32 58 40 58C48 58 55 52 55 42C55 32 40 20 40 20Z" fill="#E91E63"/>
-                        </svg>
+                    <div class="welcome-hero">
+                        <div class="welcome-logo-large">
+                            <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="45" r="32" stroke="url(#grad2)" stroke-width="3.5" fill="none"/>
+                                <line x1="30" y1="35" x2="65" y2="35" stroke="url(#grad2)" stroke-width="3.5" stroke-linecap="round"/>
+                                <line x1="30" y1="45" x2="60" y2="45" stroke="url(#grad2)" stroke-width="3.5" stroke-linecap="round"/>
+                                <line x1="30" y1="55" x2="55" y2="55" stroke="url(#grad2)" stroke-width="3.5" stroke-linecap="round"/>
+                                <circle cx="68" cy="55" r="3.5" fill="url(#grad2)"/>
+                                <path d="M65 70 Q50 85 35 70" stroke="url(#grad2)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#E8686A"/>
+                                        <stop offset="100%" style="stop-color:#E8955A"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2>Bem-vinda ao <span class="brand-highlight">Endoflow</span></h2>
+                        <p class="subtitle">Vamos juntas entender seus sintomas?</p>
+                        <p class="description">Esta é uma ferramenta de triagem rápida e gratuita para suspeita de endometriose, desenvolvida com base em evidências científicas. Leva menos de 5 minutos e pode ajudar você a conversar com mais segurança com seu médico.</p>
                     </div>
-                    <h2>Bem-vinda ao Endoflow</h2>
-                    <p class="subtitle">Vamos juntas entender seus sintomas?</p>
-                    <p class="description">Esta é uma ferramenta de triagem rápida para suspeita de endometriose. Leva menos de 5 minutos e pode ajudar você a conversar com seu médico.</p>
                     
                     <form id="registrationForm" class="form">
                         <div class="form-group">
@@ -83,6 +111,11 @@
                         <div class="form-group">
                             <label for="whatsapp">WhatsApp (com DDD)</label>
                             <input type="tel" id="whatsapp" name="whatsapp" required placeholder="(11) 99999-9999">
+                        </div>
+                        <div class="form-group">
+                            <label for="cep">CEP</label>
+                            <input type="text" id="cep" name="cep" required placeholder="00000-000" maxlength="9">
+                            <span class="form-hint" id="cepHint">Informe seu CEP para mapearmos o acesso à saúde na sua região.</span>
                         </div>
                         <button type="submit" class="btn btn-primary">Próximo</button>
                     </form>
@@ -115,13 +148,13 @@
                         <div class="consent-full" id="consent-lgpd">
                             <div class="consent-text">
                                 <h4>Política de Privacidade e Termo de Uso – Endoflow</h4>
-                                <p><strong>Última atualização:</strong> 13 de janeiro de 2026</p>
+                                <p><strong>Última atualização:</strong> 17 de fevereiro de 2026</p>
                                 
                                 <h5>1. Quais dados coletamos?</h5>
-                                <p>Para realizar a triagem, coletamos: <strong>Dados de Cadastro</strong> (nome, idade, e-mail e WhatsApp), <strong>Dados de Saúde</strong> (suas respostas ao questionário de 8 perguntas) e <strong>Dados de Uso</strong> (como você interage com a ferramenta).</p>
+                                <p>Para realizar a triagem, coletamos: <strong>Dados de Cadastro</strong> (nome, idade, e-mail, WhatsApp e CEP), <strong>Dados de Saúde</strong> (suas respostas ao questionário de 8 perguntas) e <strong>Dados de Uso</strong> (como você interage com a ferramenta).</p>
                                 
                                 <h5>2. Para que usamos seus dados?</h5>
-                                <p>Exclusivamente para: calcular seu Score de Risco, gerar seu Relatório Personalizado, enviar seu resultado por e-mail/WhatsApp e melhorar a ferramenta de forma anônima.</p>
+                                <p>Exclusivamente para: calcular seu Score de Risco, gerar seu Relatório Personalizado, enviar seu resultado por e-mail/WhatsApp, mapear o acesso à saúde na sua região (via CEP) e melhorar a ferramenta de forma anônima.</p>
                                 
                                 <h5>3. Como protegemos seus dados?</h5>
                                 <p>Utilizamos <strong>criptografia</strong> de ponta a ponta, <strong>acesso restrito</strong> apenas a profissionais autorizados e <strong>segregação</strong> de dados de identificação e dados de saúde, tudo armazenado de forma segura na Google Cloud Platform.</p>
@@ -176,7 +209,7 @@
                                 <p><strong>Benefício Indireto:</strong> Contribuir para o avanço da ciência na saúde da mulher no Brasil.</p>
                                 
                                 <h5>4. Garantia de Privacidade</h5>
-                                <p>Seus dados serão <strong>anonimizados</strong> (vinculados a um código, sem seu nome ou contato) e armazenados de forma segura. Qualquer publicação científica apresentará dados de forma agregada, impossibilitando a identificação individual.</p>
+                                <p>Seus dados serão <strong>anonimizados</strong> antes de qualquer análise. Nenhuma informação que possa identificá-la será incluída em publicações ou relatórios científicos.</p>
                                 
                                 <h5>5. Participação Voluntária</h5>
                                 <p>Sua participação é <strong>totalmente voluntária</strong>. Você pode se recusar a participar ou retirar seu consentimento a qualquer momento, sem qualquer prejuízo, através do e-mail: pesquisa@endolife.health.</p>
@@ -219,9 +252,27 @@
             <!-- Step 4: Results -->
             <section class="screen" id="screen-results">
                 <div class="screen-content results-content">
+                    <!-- Results Header -->
                     <div class="results-header">
-                        <h2>Seu resultado está pronto</h2>
+                        <div class="results-logo">
+                            <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="45" r="32" stroke="url(#grad3)" stroke-width="3.5" fill="none"/>
+                                <line x1="30" y1="35" x2="65" y2="35" stroke="url(#grad3)" stroke-width="3.5" stroke-linecap="round"/>
+                                <line x1="30" y1="45" x2="60" y2="45" stroke="url(#grad3)" stroke-width="3.5" stroke-linecap="round"/>
+                                <line x1="30" y1="55" x2="55" y2="55" stroke="url(#grad3)" stroke-width="3.5" stroke-linecap="round"/>
+                                <circle cx="68" cy="55" r="3.5" fill="url(#grad3)"/>
+                                <path d="M65 70 Q50 85 35 70" stroke="url(#grad3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#E8686A"/>
+                                        <stop offset="100%" style="stop-color:#E8955A"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2>Seu Relatório Personalizado</h2>
                         <p class="subtitle" id="userName">Olá, [Nome]</p>
+                        <p class="results-date" id="resultsDate"></p>
                     </div>
 
                     <!-- Risk Level Card -->
@@ -240,16 +291,44 @@
 
                     <!-- Explanation Card -->
                     <div class="result-card explanation-card">
-                        <h3>O que isso significa?</h3>
+                        <div class="card-header-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5C0A2A" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <h3>O que isso significa?</h3>
+                        </div>
                         <div class="explanation-content" id="explanationContent">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+
+                    <!-- Differential Diagnosis Card -->
+                    <div class="result-card differential-card" id="differentialCard" style="display:none;">
+                        <div class="card-header-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8686A" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            <h3>Diagnósticos Diferenciais</h3>
+                        </div>
+                        <div class="differential-content" id="differentialContent">
                             <!-- Dynamic content -->
                         </div>
                     </div>
 
                     <!-- Next Steps Card -->
                     <div class="result-card steps-card">
-                        <h3>Próximos Passos Recomendados</h3>
+                        <div class="card-header-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <h3>Próximos Passos Recomendados</h3>
+                        </div>
                         <div class="steps-list" id="stepsList">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+
+                    <!-- How to Talk to Your Doctor Card -->
+                    <div class="result-card doctor-card">
+                        <div class="card-header-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1976D2" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <h3>Como Informar Este Relatório ao Seu Médico</h3>
+                        </div>
+                        <div class="doctor-content" id="doctorContent">
                             <!-- Dynamic content -->
                         </div>
                     </div>
@@ -285,6 +364,19 @@
                         </button>
                     </div>
 
+                    <!-- Ethics & Technology Card -->
+                    <div class="result-card ethics-card">
+                        <div class="card-header-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5C0A2A" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <h3>Sobre Esta Tecnologia</h3>
+                        </div>
+                        <div class="ethics-content">
+                            <p>O Endoflow é uma ferramenta de <strong>triagem digital baseada em evidências científicas</strong>, desenvolvida pela Endolife HealthTech em parceria com o Hub Inova UNIMES, no âmbito do Programa SUS Digital do Ministério da Saúde.</p>
+                            <p>Esta ferramenta utiliza um algoritmo de pontuação validado cientificamente que analisa sintomas autorrelatados. <strong>Não utiliza inteligência artificial para gerar diagnósticos</strong> — o cálculo é determinístico e transparente, baseado em coeficientes derivados da literatura médica especializada.</p>
+                            <p>Seus dados são protegidos pela <strong>Lei Geral de Proteção de Dados (LGPD)</strong> e armazenados com criptografia na Google Cloud Platform. Você tem direito ao acesso, correção e exclusão dos seus dados a qualquer momento.</p>
+                        </div>
+                    </div>
+
                     <!-- Disclaimer -->
                     <div class="disclaimer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2">
@@ -292,7 +384,10 @@
                             <line x1="12" y1="8" x2="12" y2="12"/>
                             <line x1="12" y1="16" x2="12.01" y2="16"/>
                         </svg>
-                        <p><strong>Aviso Importante:</strong> Este questionário é uma ferramenta de triagem e <strong>não constitui diagnóstico médico</strong>. O resultado apresentado indica apenas uma estimativa de risco baseada em sintomas autorrelatados. Para um diagnóstico definitivo, é essencial consultar um médico especialista que poderá solicitar exames complementares. Nunca tome decisões de saúde baseadas exclusivamente neste resultado.</p>
+                        <div>
+                            <p><strong>Aviso Importante:</strong> Este questionário é uma ferramenta de triagem e <strong>não constitui diagnóstico médico</strong>. O resultado apresentado indica apenas uma estimativa de risco baseada em sintomas autorrelatados. Para um diagnóstico definitivo, é essencial consultar um médico especialista que poderá solicitar exames complementares. Nunca tome decisões de saúde baseadas exclusivamente neste resultado.</p>
+                            <p class="disclaimer-ref">Referência: Score Endoflow v1.0 — Endolife HealthTech / Hub Inova UNIMES, 2026.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -300,6 +395,16 @@
 
         <!-- Footer -->
         <footer class="footer">
+            <div class="footer-brand">
+                <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="45" r="32" stroke="#E8686A" stroke-width="3.5" fill="none"/>
+                    <line x1="30" y1="35" x2="65" y2="35" stroke="#E8686A" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="30" y1="45" x2="60" y2="45" stroke="#E8686A" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="30" y1="55" x2="55" y2="55" stroke="#E8686A" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="68" cy="55" r="3.5" fill="#E8686A"/>
+                </svg>
+                <span>endoflow</span>
+            </div>
             <p>© 2026 Endolife HealthTech | Todos os direitos reservados</p>
             <p class="footer-links">
                 <a href="#">Política de Privacidade</a> | 
